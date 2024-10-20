@@ -13,8 +13,9 @@ df = pd.read_csv('BRCA.csv')
 df = df.drop(columns=['Patient_ID'])
 df = df.drop(columns=['ER status'])
 df = df.drop(columns=['PR status'])
-
-
+# df = df.drop(columns=['Date_of_Surgery'])
+# df = df.drop(columns=['Date_of_Last_Visit'])
+# df = df.drop(columns=['Gender'])
 
 # Khởi tạo LabelEncoder
 
@@ -38,12 +39,12 @@ df.to_csv('output.csv', index=False)
 X = df.drop('Patient_Status', axis=1)
 y = df['Patient_Status']
 
-    # Chuẩn hóa dữ liệu
+# Chuẩn hóa dữ liệu sao cho trung bình = 0, độ lệch chuẩn gần bằng 1, tránh việc một đặc trưng nào đó chiếm ưu thế chỉ vì phạm vi giá trị của nó lớn hơn.
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
-    # Giảm chiều dữ liệu bằng PCA
-pca = PCA(n_components=10)
+# Giảm chiều dữ liệu bằng PCA   
+pca = PCA(n_components=9)
 X = pca.fit_transform(X)
 
     # Chia dữ liệu thành tập huấn luyện và tập kiểm tra
@@ -67,8 +68,9 @@ grid_search.fit(X_train, y_train)
 print(f'Best parameters: {grid_search.best_params_}')
 print(f'Best cross-validation accuracy: {grid_search.best_score_ * 100:.2f}%')
 
-    # Huấn luyện mô hình với các tham số tốt nhất
+# Huấn luyện mô hình với các tham số tốt nhất
 best_model = grid_search.best_estimator_
+print("Best model: ",best_model)
 best_model.fit(X_train, y_train)
 
     # Dự đoán trên tập kiểm tra
